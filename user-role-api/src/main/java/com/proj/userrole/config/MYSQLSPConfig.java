@@ -5,9 +5,12 @@ import static com.proj.userrole.constants.DatabaseConstants.IN_USER_ROLE_ID;
 import static com.proj.userrole.constants.DatabaseConstants.OUT_PARAMETER_PK_VALUE;
 import static com.proj.userrole.constants.DatabaseConstants.OUT_PARAMETER_ROW_COUNT;
 import static com.proj.userrole.constants.DatabaseConstants.RESULTS_GET_ALL;
+import static com.proj.userrole.constants.DatabaseConstants.RESULTS_GET_BYID;
 import static com.proj.userrole.constants.DatabaseConstants.SCHEMA_NAME;
+import static com.proj.userrole.constants.DatabaseConstants.SP_NAME_UPDURLS;
 import static com.proj.userrole.constants.DatabaseConstants.SP_NAME_URPOST0;
 import static com.proj.userrole.constants.DatabaseConstants.SP_NAME_USRRALL;
+import static com.proj.userrole.constants.DatabaseConstants.SP_NAME_USRRBID;
 
 import java.sql.Types;
 
@@ -35,19 +38,37 @@ public class MYSQLSPConfig {
 
 	@Bean("createUSRROLESPInstance")
 	public SimpleJdbcCall createUSRROLESPInstance() {
-		SimpleJdbcCall user_roleSP = new SimpleJdbcCall(dataSource).withSchemaName(SCHEMA_NAME)
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource).withSchemaName(SCHEMA_NAME)
 				.withProcedureName(SP_NAME_USRRALL)
 				.declareParameters(new SqlOutParameter(OUT_PARAMETER_ROW_COUNT, Types.INTEGER))
 				.returningResultSet(RESULTS_GET_ALL, new UserRoleRepoMapper(userRoleMapper));
-		return user_roleSP;
+		return simpleJdbcCall;
+	}
+
+	@Bean("createUSRRBIDSPInstance")
+	public SimpleJdbcCall createUSRRBIDSPInstance() {
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource).withSchemaName(SCHEMA_NAME)
+				.withProcedureName(SP_NAME_USRRBID).declareParameters(new SqlParameter(IN_USER_ROLE_ID, Types.VARCHAR))
+				.returningResultSet(RESULTS_GET_BYID, new UserRoleRepoMapper(userRoleMapper));
+		return simpleJdbcCall;
 	}
 
 	@Bean("createURPOST0SPInstance")
 	public SimpleJdbcCall createURPOST0SPInstance() {
-		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource).withProcedureName(SP_NAME_URPOST0)
-				.declareParameters(new SqlParameter(IN_USER_ROLE_ID, Types.VARCHAR))
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource).withSchemaName(SCHEMA_NAME)
+				.withProcedureName(SP_NAME_URPOST0).declareParameters(new SqlParameter(IN_USER_ROLE_ID, Types.VARCHAR))
 				.declareParameters(new SqlParameter(IN_USER_ROLE, Types.VARCHAR))
 				.declareParameters(new SqlOutParameter(OUT_PARAMETER_PK_VALUE, Types.VARCHAR));
+		simpleJdbcCall.compile();
+		return simpleJdbcCall;
+	}
+
+	@Bean("createUPDURLSSPInstance")
+	public SimpleJdbcCall createUPDURLSSPInstance() {
+		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource).withSchemaName(SCHEMA_NAME)
+				.withProcedureName(SP_NAME_UPDURLS).declareParameters(new SqlParameter(IN_USER_ROLE_ID, Types.VARCHAR))
+				.declareParameters(new SqlParameter(IN_USER_ROLE, Types.VARCHAR))
+				.declareParameters(new SqlOutParameter(OUT_PARAMETER_ROW_COUNT, Types.INTEGER));
 		simpleJdbcCall.compile();
 		return simpleJdbcCall;
 	}

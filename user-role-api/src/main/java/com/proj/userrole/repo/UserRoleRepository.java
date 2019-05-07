@@ -10,5 +10,10 @@ import com.proj.entity.quiz.UserRole;
 @Repository
 public interface UserRoleRepository {
 	public List<UserRole> findAll() throws SQLException;
-	public Boolean saveAll(String userRoleId, String userRole) throws SQLException; 
+
+	public UserRole findAllById(String userRoleId) throws SQLException;
+
+	public Boolean saveAll(String userRoleId, String userRole) throws SQLException;
+
+	public Boolean updateById(String userRoleId, String userRole) throws SQLException;
 }

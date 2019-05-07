@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.proj.entity.quiz.UserRole;
 import com.proj.userrole.repo.UserRoleRepository;
@@ -24,10 +25,14 @@ public class UserRoleService {
 		log.info("START method fetchUserRoleIdAndName in UserRoleService");
 		List<UserRole> userRoles = userRoleRepository.findAll();
 		log.info("END method fetchUserRoleIdAndName in UserRoleService");
-		if (!ObjectUtils.isEmpty(userRoles)) {
-			return userRoles;
-		} else
-			return null;
+		return (!ObjectUtils.isEmpty(userRoles) ? userRoles : null);
+	}
+
+	public UserRole fetchUserRoleAndNameById(String userRoleId) throws SQLException {
+		log.info("START method fetchUserRoleAndNameById in UserRoleService");
+		UserRole userRole = userRoleRepository.findAllById(userRoleId);
+		log.info("END method fetchUserRoleAndNameById in UserRoleService");
+		return (!StringUtils.isEmpty(userRole) ? userRole : null);
 	}
 
 	public Boolean insertUserRoles(String userRoleId, String userRole) throws SQLException {
@@ -37,4 +42,10 @@ public class UserRoleService {
 		return (check == true ? true : false);
 	}
 
+	public Boolean updateUserRoles(String userRoleId, String userRole) throws SQLException {
+		log.info("START method updateUser in UserRoleService");
+		Boolean check = userRoleRepository.updateById(userRoleId, userRole);
+		log.info("END method updateUser in UserRoleService");
+		return (check == true ? true : false);
+	}
 }
